@@ -1,13 +1,29 @@
 pipeline {
     agent none
     stages {
+        stage('Checkout') {
+            agent {
+                docker { image 'alpine/git' }
+            }
+            steps {
+                // Clone the repository
+                sh 'git clone https://github.com/your-repo/your-project.git'
+                // Navigate to the project directory
+                dir('your-project') {
+                    // Ensure the latest version is pulled
+                    sh 'git pull origin main'
+                }
+            }
+        }
         stage('Build') {
             agent {
                 docker { image 'python:3.9-alpine' }
             }
             steps {
-                sh 'python --version'
-                sh 'pip install --user -r requirements.txt'
+                dir('your-project') {
+                    sh 'python --version'
+                    sh 'pip install --user -r requirements.txt'
+                }
             }
         }
         stage('Test') {
@@ -15,7 +31,9 @@ pipeline {
                 docker { image 'python:3.9-alpine' }
             }
             steps {
-                sh 'pytest'
+                dir('your-project') {
+                    sh 'pytest'
+                }
             }
         }
         stage('Deploy') {
@@ -24,8 +42,10 @@ pipeline {
             }
             steps {
                 script {
-                    def app = docker.build("my-python-app:${env.BUILD_ID}")
-                    app.push()
+                    dir('your-project') {
+                        def app = docker.build("my-python-app:${env.BUILD_ID}")
+                        app.push()
+                    }
                 }
             }
         }
