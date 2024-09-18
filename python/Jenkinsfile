@@ -20,7 +20,7 @@ pipeline {
                 docker { image 'python:3.9-alpine' }
             }
             steps {
-                dir('your-project') {
+                dir('Jenkins-Zero-To-Hero/python') {
                     sh 'python --version'
                     sh 'pip install --user -r requirements.txt'
                 }
@@ -31,7 +31,7 @@ pipeline {
                 docker { image 'python:3.9-alpine' }
             }
             steps {
-                dir('your-project') {
+                dir('Jenkins-Zero-To-Hero/python') {
                     sh 'pytest'
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
             }
             steps {
                 script {
-                    dir('your-project') {
+                    dir('Jenkins-Zero-To-Hero/python') {
                         def app = docker.build("my-python-app:${env.BUILD_ID}")
                         app.push()
                     }
