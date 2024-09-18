@@ -1,0 +1,33 @@
+pipeline {
+    agent none
+    stages {
+        stage('Build') {
+            agent {
+                docker { image 'python:3.9-alpine' }
+            }
+            steps {
+                sh 'python --version'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Test') {
+            agent {
+                docker { image 'python:3.9-alpine' }
+            }
+            steps {
+                sh 'pytest'
+            }
+        }
+        stage('Deploy') {
+            agent {
+                docker { image 'docker:20.10.7' }
+            }
+            steps {
+                script {
+                    def app = docker.build("my-python-app:${env.BUILD_ID}")
+                    app.push()
+                }
+            }
+        }
+    }
+}
