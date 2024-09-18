@@ -7,9 +7,9 @@ pipeline {
             }
             steps {
                 // Clone the repository
-                sh 'git clone https://github.com/your-repo/your-project.git'
+                sh 'git clone https://github.com/Omkar-Patil16/Jenkins-Zero-To-Hero.git'
                 // Navigate to the project directory
-                dir('your-project') {
+                dir('Jenkins-Zero-To-Hero/python') {
                     // Ensure the latest version is pulled
                     sh 'git pull origin main'
                 }
